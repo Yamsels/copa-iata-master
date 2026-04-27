@@ -1,65 +1,237 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plane, Play, GraduationCap, Trophy, RotateCcw, Timer as TimerIcon } from "lucide-react";
+import Dashboard from "@/components/game/Dashboard";
+import RegionSelector from "@/components/game/RegionSelector";
+import TriviaEngine from "@/components/game/TriviaEngine";
+import { GameState, INITIAL_STATE, Region, Destination, REGIONS_ORDER } from "@/lib/game-logic";
+import destinosData from "@/data/destinos.json";
 
 export default function Home() {
+  const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
+  const [currentScreen, setCurrentScreen] = useState<"home" | "regions" | "game" | "results">("home");
+  const [activeRegion, setActiveRegion] = useState<Region | null>(null);
+  const [gameMode, setGameMode] = useState<"practice" | "exam">("practice");
+  const [lastResult, setLastResult] = useState<{ region: Region, accuracy: number } | null>(null);
+
+  // Load game state
+  useEffect(() => {
+    const saved = localStorage.getItem("copa_iata_master_v1");
+    if (saved) {
+      try {
+        setGameState(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to load game state", e);
+      }
+    }
+  }, []);
+
+  // Save game state
+  useEffect(() => {
+    localStorage.setItem("copa_iata_master_v1", JSON.stringify(gameState));
+  }, [gameState]);
+
+  const totalDestinations = Object.values(destinosData).flat().length;
+  const masteredCount = gameState.masteredCodes.length;
+
+  const handleStartGame = (region: Region, mode: "practice" | "exam") => {
+    setActiveRegion(region);
+    setGameMode(mode);
+    setCurrentScreen("game");
+  };
+
+  const handleGameComplete = (accuracy: number) => {
+    if (!activeRegion) return;
+
+    setLastResult({ region: activeRegion, accuracy });
+    
+    setGameState(prev => {
+      const newState = { ...prev };
+      
+      // Update best score
+      if (accuracy > (prev.bestScores[activeRegion] || 0)) {
+        newState.bestScores[activeRegion] = accuracy;
+      }
+
+      // Unlock next region if 90% accuracy
+      if (accuracy >= 90) {
+        const currentIndex = REGIONS_ORDER.indexOf(activeRegion);
+        if (currentIndex < REGIONS_ORDER.length - 1) {
+          const nextRegion = REGIONS_ORDER[currentIndex + 1];
+          if (!prev.unlockedRegions.includes(nextRegion)) {
+            newState.unlockedRegions = [...prev.unlockedRegions, nextRegion];
+          }
+        }
+      }
+
+      // Update mastered codes (only on success)
+      const regionDestinations = (destinosData as any)[activeRegion] as Destination[];
+      const regionCodes = regionDestinations.map(d => d.iata);
+      
+      // If accuracy is high, assume mastery of these codes (simplified for now)
+      // Real implementation would track per-code, but here we track per-level success
+      if (accuracy >= 90) {
+        const newMastered = new Set([...prev.masteredCodes, ...regionCodes]);
+        newState.masteredCodes = Array.from(newMastered);
+      }
+
+      // Update points
+      newState.points += Math.round(accuracy * (gameMode === "exam" ? 2 : 1));
+
+      return newState;
+    });
+
+    setCurrentScreen("results");
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="max-w-xl mx-auto min-h-screen flex flex-col p-4">
+      <AnimatePresence mode="wait">
+        {currentScreen === "home" && (
+          <motion.div
+            key="home"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex-1 flex flex-col items-center justify-center text-center py-12"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+            <div className="relative mb-8">
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Plane className="w-24 h-24 text-[var(--primary)]" />
+              </motion.div>
+              <div className="absolute -bottom-2 -right-2 bg-[var(--primary)] text-[#050b18] text-xs font-bold px-2 py-1 rounded-md rotate-12">
+                COPA
+              </div>
+            </div>
+            
+            <h1 className="text-4xl font-extrabold mb-2 bg-gradient-to-r from-white to-[var(--primary)] bg-clip-text text-transparent">
+              Copa IATA Master
+            </h1>
+            <p className="text-white/60 mb-12 max-w-xs">
+              Domina los 85 códigos IATA de la red de Copa Airlines y conviértete en Comandante de Flota.
+            </p>
+
+            <button 
+              onClick={() => setCurrentScreen("regions")}
+              className="btn-primary w-full flex items-center justify-center gap-3 text-lg"
+            >
+              <Play fill="currentColor" size={20} />
+              INICIAR MISIÓN
+            </button>
+          </motion.div>
+        )}
+
+        {currentScreen === "regions" && (
+          <motion.div
+            key="regions"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="flex-1"
+          >
+            <Dashboard 
+              points={gameState.points} 
+              masteredCount={masteredCount} 
+              totalCount={totalDestinations} 
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            
+            <RegionSelector 
+              unlockedRegions={gameState.unlockedRegions}
+              bestScores={gameState.bestScores}
+              onSelectRegion={(region) => {
+                setActiveRegion(region);
+                // Show mode selection or just start practice
+                setGameMode("practice");
+                setCurrentScreen("game");
+              }}
+            />
+
+            {/* Floating button for Exam Mode toggle if region selected */}
+          </motion.div>
+        )}
+
+        {currentScreen === "game" && activeRegion && (
+          <TriviaEngine
+            key="game-engine"
+            region={activeRegion}
+            destinations={(destinosData as any)[activeRegion]}
+            mode={gameMode}
+            onComplete={handleGameComplete}
+            onExit={() => setCurrentScreen("regions")}
+          />
+        )}
+
+        {currentScreen === "results" && lastResult && (
+          <motion.div
+            key="results"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex-1 flex flex-col items-center justify-center text-center"
           >
-            Documentation
-          </a>
+            <div className={`w-32 h-32 rounded-full flex items-center justify-center mb-6 shadow-2xl ${
+              lastResult.accuracy >= 90 ? "bg-[var(--success)] shadow-[var(--success)]/20" : "bg-[var(--error)] shadow-[var(--error)]/20"
+            }`}>
+              <span className="text-4xl font-bold">{lastResult.accuracy}%</span>
+            </div>
+
+            <h2 className="text-3xl font-bold mb-2">
+              {lastResult.accuracy >= 90 ? "¡Excelente Trabajo!" : "Sigue Practicando"}
+            </h2>
+            <p className="text-white/60 mb-12 px-6">
+              {lastResult.accuracy >= 90 
+                ? "Has demostrado un dominio excepcional de esta región. ¡Nuevos destinos desbloqueados!"
+                : "Necesitas al menos 90% de precisión para desbloquear el siguiente nivel."}
+            </p>
+
+            <div className="w-full space-y-4">
+              <button 
+                onClick={() => setCurrentScreen("regions")}
+                className="btn-primary w-full flex items-center justify-center gap-2"
+              >
+                <Trophy size={20} />
+                VOLVER AL DASHBOARD
+              </button>
+              
+              <button 
+                onClick={() => setCurrentScreen("game")}
+                className="w-full py-4 border border-white/10 rounded-xl flex items-center justify-center gap-2 opacity-60 hover:opacity-100"
+              >
+                <RotateCcw size={20} />
+                REINTENTAR NIVEL
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mode Toggle for Game (only visible on regions screen when a region is focused/selected or global) */}
+      {currentScreen === "regions" && (
+        <div className="fixed bottom-6 left-4 right-4 flex bg-[var(--secondary)] p-1 rounded-2xl border border-white/10 shadow-2xl">
+          <button 
+            onClick={() => setGameMode("practice")}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all ${
+              gameMode === "practice" ? "bg-[var(--primary)] text-[#050b18] font-bold" : "text-white/40"
+            }`}
+          >
+            <GraduationCap size={18} />
+            Práctica
+          </button>
+          <button 
+            onClick={() => setGameMode("exam")}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all ${
+              gameMode === "exam" ? "bg-[var(--primary)] text-[#050b18] font-bold" : "text-white/40"
+            }`}
+          >
+            <TimerIcon size={18} />
+            Examen
+          </button>
         </div>
-      </main>
-    </div>
+      )}
+    </main>
   );
 }

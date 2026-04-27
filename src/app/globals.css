@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050b18;
+  --foreground: #f8fafc;
+  --primary: #00f2ff;
+  --primary-dark: #0088cc;
+  --secondary: #1e293b;
+  --accent: #00f2ff;
+  --success: #10b981;
+  --error: #ef4444;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --glass: rgba(15, 23, 42, 0.8);
 }
 
 @theme inline {
@@ -12,15 +20,27 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] min-h-screen font-sans;
+    background-image: 
+      radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05) 0%, transparent 50%),
+      linear-gradient(to bottom, #050b18, #0a192f),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%2300f2ff' stroke-width='0.5' stroke-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .glass-card {
+    @apply bg-[var(--glass)] backdrop-blur-md border border-white/10 rounded-2xl;
+  }
+  
+  .btn-primary {
+    @apply bg-[var(--primary)] text-[#050b18] font-bold py-3 px-6 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(0,242,255,0.3)];
+  }
+
+  .iata-input {
+    @apply bg-transparent border-b-2 border-[var(--primary)] text-4xl text-center uppercase tracking-[0.5em] focus:outline-none w-full max-w-[200px] py-2;
+  }
 }
