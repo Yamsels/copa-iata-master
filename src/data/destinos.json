@@ -1,0 +1,507 @@
+{
+  "Norteamerica": [
+    {
+      "ciudad": "Montreal",
+      "iata": "YUL",
+      "pais": "Canadá"
+    },
+    {
+      "ciudad": "Toronto",
+      "iata": "YYZ",
+      "pais": "Canadá"
+    },
+    {
+      "ciudad": "Monterrey",
+      "iata": "MTY",
+      "pais": "México"
+    },
+    {
+      "ciudad": "Puerto Vallarta",
+      "iata": "PVR",
+      "pais": "México"
+    },
+    {
+      "ciudad": "Guadalajara",
+      "iata": "GDL",
+      "pais": "México"
+    },
+    {
+      "ciudad": "Ciudad de México (MEX)",
+      "iata": "MEX",
+      "pais": "México"
+    },
+    {
+      "ciudad": "Ciudad de México (NLU)",
+      "iata": "NLU",
+      "pais": "México"
+    },
+    {
+      "ciudad": "Cancún",
+      "iata": "CUN",
+      "pais": "México"
+    },
+    {
+      "ciudad": "Tulum",
+      "iata": "TQO",
+      "pais": "México",
+      "status": "new"
+    },
+    {
+      "ciudad": "San José del Cabo",
+      "iata": "SJD",
+      "pais": "México"
+    },
+    {
+      "ciudad": "Atlanta",
+      "iata": "ATL",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Austin",
+      "iata": "AUS",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Baltimore",
+      "iata": "BWI",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Boston",
+      "iata": "BOS",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Chicago",
+      "iata": "ORD",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Denver",
+      "iata": "DEN",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Fort Lauderdale",
+      "iata": "FLL",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Las Vegas",
+      "iata": "LAS",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Los Ángeles",
+      "iata": "LAX",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Miami",
+      "iata": "MIA",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Nueva York",
+      "iata": "JFK",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Orlando",
+      "iata": "MCO",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Raleigh-Durham",
+      "iata": "RDU",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "San Francisco",
+      "iata": "SFO",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Tampa",
+      "iata": "TPA",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "Washington",
+      "iata": "IAD",
+      "pais": "USA"
+    },
+    {
+      "ciudad": "New Orleans",
+      "iata": "MSY",
+      "pais": "USA",
+      "status": "new"
+    },
+    {
+      "ciudad": "San Diego",
+      "iata": "SAN",
+      "pais": "USA"
+    }
+  ],
+  "Centroamerica": [
+    {
+      "ciudad": "Panamá",
+      "iata": "PTY",
+      "pais": "Panamá",
+      "tipo": "HUB"
+    },
+    {
+      "ciudad": "David",
+      "iata": "DAV",
+      "pais": "Panamá"
+    },
+    {
+      "ciudad": "San José",
+      "iata": "SJO",
+      "pais": "Costa Rica"
+    },
+    {
+      "ciudad": "Liberia",
+      "iata": "LIR",
+      "pais": "Costa Rica"
+    },
+    {
+      "ciudad": "Comayagua",
+      "iata": "XPL",
+      "pais": "Honduras"
+    },
+    {
+      "ciudad": "San Pedro Sula",
+      "iata": "SAP",
+      "pais": "Honduras"
+    },
+    {
+      "ciudad": "Managua",
+      "iata": "MGA",
+      "pais": "Nicaragua"
+    },
+    {
+      "ciudad": "San Salvador",
+      "iata": "SAL",
+      "pais": "El Salvador"
+    },
+    {
+      "ciudad": "Ciudad de Guatemala",
+      "iata": "GUA",
+      "pais": "Guatemala"
+    },
+    {
+      "ciudad": "Belice",
+      "iata": "BZE",
+      "pais": "Belice"
+    }
+  ],
+  "Caribe": [
+    {
+      "ciudad": "La Habana",
+      "iata": "HAV",
+      "pais": "Cuba"
+    },
+    {
+      "ciudad": "Holguín",
+      "iata": "HOG",
+      "pais": "Cuba"
+    },
+    {
+      "ciudad": "Santa Clara",
+      "iata": "SNU",
+      "pais": "Cuba"
+    },
+    {
+      "ciudad": "Santiago",
+      "iata": "STI",
+      "pais": "Rep. Dominicana"
+    },
+    {
+      "ciudad": "Santo Domingo",
+      "iata": "SDQ",
+      "pais": "Rep. Dominicana"
+    },
+    {
+      "ciudad": "Punta Cana",
+      "iata": "PUJ",
+      "pais": "Rep. Dominicana"
+    },
+    {
+      "ciudad": "Puerto Plata",
+      "iata": "POP",
+      "pais": "Rep. Dominicana"
+    },
+    {
+      "ciudad": "Montego Bay",
+      "iata": "MBJ",
+      "pais": "Jamaica"
+    },
+    {
+      "ciudad": "Kingston",
+      "iata": "KIN",
+      "pais": "Jamaica"
+    },
+    {
+      "ciudad": "Puerto Príncipe",
+      "iata": "PAP",
+      "pais": "Haití",
+      "status": "suspendido"
+    },
+    {
+      "ciudad": "San Juan",
+      "iata": "SJU",
+      "pais": "Puerto Rico"
+    },
+    {
+      "ciudad": "Nassau",
+      "iata": "NAS",
+      "pais": "Bahamas"
+    },
+    {
+      "ciudad": "St. Maarten",
+      "iata": "SXM",
+      "pais": "Sint Maarten"
+    },
+    {
+      "ciudad": "Aruba",
+      "iata": "AUA",
+      "pais": "Aruba"
+    },
+    {
+      "ciudad": "Curazao",
+      "iata": "CUR",
+      "pais": "Curazao"
+    },
+    {
+      "ciudad": "Puerto España",
+      "iata": "POS",
+      "pais": "Trinidad y Tobago"
+    },
+    {
+      "ciudad": "Bridgetown",
+      "iata": "BGI",
+      "pais": "Barbados"
+    }
+  ],
+  "Colombia": [
+    {
+      "ciudad": "San Andrés",
+      "iata": "ADZ",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Barranquilla",
+      "iata": "BAQ",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Bucaramanga",
+      "iata": "BGA",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Bogotá",
+      "iata": "BOG",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Cali",
+      "iata": "CLO",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Cartagena",
+      "iata": "CTG",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Cúcuta",
+      "iata": "CUC",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Medellín",
+      "iata": "MDE",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Pereira",
+      "iata": "PEI",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Santa Marta",
+      "iata": "SMR",
+      "pais": "Colombia"
+    },
+    {
+      "ciudad": "Armenia",
+      "iata": "AXM",
+      "pais": "Colombia"
+    }
+  ],
+  "Brasil": [
+    {
+      "ciudad": "Brasilia",
+      "iata": "BSB",
+      "pais": "Brasil"
+    },
+    {
+      "ciudad": "Belo Horizonte",
+      "iata": "CNF",
+      "pais": "Brasil"
+    },
+    {
+      "ciudad": "Río de Janeiro",
+      "iata": "GIG",
+      "pais": "Brasil"
+    },
+    {
+      "ciudad": "São Paulo",
+      "iata": "GRU",
+      "pais": "Brasil"
+    },
+    {
+      "ciudad": "Manaos",
+      "iata": "MAO",
+      "pais": "Brasil"
+    },
+    {
+      "ciudad": "Porto Alegre",
+      "iata": "POA",
+      "pais": "Brasil"
+    },
+    {
+      "ciudad": "Salvador de Bahía",
+      "iata": "SSA",
+      "pais": "Brasil"
+    },
+    {
+      "ciudad": "Florianópolis",
+      "iata": "FLN",
+      "pais": "Brasil"
+    },
+    {
+      "ciudad": "Belém",
+      "iata": "BEL",
+      "pais": "Brasil"
+    }
+  ],
+  "Venezuela": [
+    {
+      "ciudad": "Caracas",
+      "iata": "CCS",
+      "pais": "Venezuela"
+    },
+    {
+      "ciudad": "Maracaibo",
+      "iata": "MAR",
+      "pais": "Venezuela"
+    },
+    {
+      "ciudad": "Valencia",
+      "iata": "VLN",
+      "pais": "Venezuela"
+    },
+    {
+      "ciudad": "Barcelona",
+      "iata": "BLA",
+      "pais": "Venezuela"
+    },
+    {
+      "ciudad": "Barquisimeto",
+      "iata": "BRM",
+      "pais": "Venezuela"
+    }
+  ],
+  "Argentina": [
+    {
+      "ciudad": "Buenos Aires",
+      "iata": "EZE",
+      "pais": "Argentina"
+    },
+    {
+      "ciudad": "Córdoba",
+      "iata": "COR",
+      "pais": "Argentina"
+    },
+    {
+      "ciudad": "Rosario",
+      "iata": "ROS",
+      "pais": "Argentina"
+    },
+    {
+      "ciudad": "Mendoza",
+      "iata": "MDZ",
+      "pais": "Argentina"
+    },
+    {
+      "ciudad": "Salta",
+      "iata": "SLA",
+      "pais": "Argentina"
+    },
+    {
+      "ciudad": "Tucumán",
+      "iata": "TUC",
+      "pais": "Argentina"
+    }
+  ],
+  "Suramerica_General": [
+    {
+      "ciudad": "Santa Cruz",
+      "iata": "VVI",
+      "pais": "Bolivia"
+    },
+    {
+      "ciudad": "Santiago",
+      "iata": "SCL",
+      "pais": "Chile"
+    },
+    {
+      "ciudad": "Guayaquil",
+      "iata": "GYE",
+      "pais": "Ecuador"
+    },
+    {
+      "ciudad": "Quito",
+      "iata": "UIO",
+      "pais": "Ecuador"
+    },
+    {
+      "ciudad": "Manta",
+      "iata": "MEC",
+      "pais": "Ecuador"
+    },
+    {
+      "ciudad": "Lima",
+      "iata": "LIM",
+      "pais": "Perú"
+    },
+    {
+      "ciudad": "Chiclayo",
+      "iata": "CIX",
+      "pais": "Perú"
+    },
+    {
+      "ciudad": "Asunción",
+      "iata": "ASU",
+      "pais": "Paraguay"
+    },
+    {
+      "ciudad": "Montevideo",
+      "iata": "MVD",
+      "pais": "Uruguay"
+    },
+    {
+      "ciudad": "Georgetown",
+      "iata": "GEO",
+      "pais": "Guyana"
+    },
+    {
+      "ciudad": "Paramaribo",
+      "iata": "PBM",
+      "pais": "Surinam"
+    }
+  ]
+}
