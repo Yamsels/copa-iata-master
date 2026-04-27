@@ -130,7 +130,9 @@ export default function TriviaEngine({ region, destinations, mode, onComplete, o
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="w-full text-center mb-12"
         >
-          <h2 className="text-5xl font-bold mb-2 tracking-tight">{currentDestination.ciudad}</h2>
+          <h2 className="text-5xl font-bold mb-2 tracking-tight">
+            {currentDestination.ciudad.replace(/\s*\(.*?\)\s*/g, '').trim()}
+          </h2>
           <p className="text-xl text-[var(--primary)] font-medium opacity-80">{currentDestination.pais}</p>
         </motion.div>
 
@@ -152,11 +154,21 @@ export default function TriviaEngine({ region, destinations, mode, onComplete, o
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.5 }}
-                className={`absolute -top-16 p-4 rounded-full ${
-                  feedback === 'correct' ? 'bg-[var(--success)]' : 'bg-[var(--error)]'
+                className={`absolute -top-20 flex flex-col items-center gap-2 p-4 rounded-3xl ${
+                  feedback === 'correct' ? 'bg-[var(--success)]' : 'bg-[var(--error)] shadow-[0_0_30px_var(--error)]'
                 }`}
               >
-                {feedback === 'correct' ? <Check className="text-white" size={32} /> : <X className="text-white" size={32} />}
+                {feedback === 'correct' ? (
+                  <Check className="text-white" size={32} />
+                ) : (
+                  <>
+                    <X className="text-white" size={24} />
+                    <div className="text-center">
+                      <span className="text-[10px] uppercase font-bold opacity-60 block">Correcto:</span>
+                      <span className="text-2xl font-black">{currentDestination.iata.toUpperCase()}</span>
+                    </div>
+                  </>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
