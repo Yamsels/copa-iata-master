@@ -42,7 +42,7 @@ export default function TriviaEngine({ destinations, mode, difficulty, timerSeco
   const [lives, setLives] = useState(3);
   const [correctCount, setCorrectCount] = useState(0);
   const [feedback, setFeedback] = useState<"correct" | "incorrect" | null>(null);
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
+  const [timeLeft, setTimeLeft] = useState<number>(timerSeconds);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
