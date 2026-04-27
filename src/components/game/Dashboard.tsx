@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Plane, Trophy, Target, Award } from "lucide-react";
+import { Trophy, Target, Award } from "lucide-react";
 import { getRank } from "@/lib/game-logic";
 
 interface DashboardProps {
