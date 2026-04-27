@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plane, Play, GraduationCap, Trophy, RotateCcw, Timer as TimerIcon } from "lucide-react";
+import { Plane, Play, Trophy, RotateCcw } from "lucide-react";
 import Dashboard from "@/components/game/Dashboard";
 import RegionSelector from "@/components/game/RegionSelector";
 import TriviaEngine from "@/components/game/TriviaEngine";
@@ -10,37 +10,33 @@ import { GameState, INITIAL_STATE, Region, Destination, REGIONS_ORDER } from "@/
 import destinosData from "@/data/destinos.json";
 
 export default function Home() {
-  const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
+  const [gameState, setGameState] = useState<GameState>(() => {
+    if (typeof window === "undefined") return INITIAL_STATE;
+    const saved = localStorage.getItem("copa_iata_master_v1");
+    if (!saved) return INITIAL_STATE;
+    try {
+      return JSON.parse(saved) as GameState;
+    } catch (e) {
+      console.error("Failed to load game state", e);
+      return INITIAL_STATE;
+    }
+  });
   const [currentScreen, setCurrentScreen] = useState<"home" | "regions" | "game" | "results">("home");
   const [activeRegion, setActiveRegion] = useState<Region | null>(null);
   const [gameMode, setGameMode] = useState<"practice" | "exam">("practice");
+  const [difficulty, setDifficulty] = useState<"standard" | "challenge">("standard");
+  const [timerSeconds, setTimerSeconds] = useState<5 | 7>(5);
+  const [showGameOptions, setShowGameOptions] = useState(false);
   const [lastResult, setLastResult] = useState<{ region: Region, accuracy: number } | null>(null);
-
-  // Load game state
-  useEffect(() => {
-    const saved = localStorage.getItem("copa_iata_master_v1");
-    if (saved) {
-      try {
-        setGameState(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to load game state", e);
-      }
-    }
-  }, []);
+  const destinationsByRegion = destinosData as Record<Region, Destination[]>;
 
   // Save game state
   useEffect(() => {
     localStorage.setItem("copa_iata_master_v1", JSON.stringify(gameState));
   }, [gameState]);
 
-  const totalDestinations = Object.values(destinosData).flat().length;
+  const totalDestinations = Object.values(destinationsByRegion).flat().length;
   const masteredCount = gameState.masteredCodes.length;
-
-  const handleStartGame = (region: Region, mode: "practice" | "exam") => {
-    setActiveRegion(region);
-    setGameMode(mode);
-    setCurrentScreen("game");
-  };
 
   const handleGameComplete = (accuracy: number) => {
     if (!activeRegion) return;
@@ -67,7 +63,7 @@ export default function Home() {
       }
 
       // Update mastered codes (only on success)
-      const regionDestinations = (destinosData as any)[activeRegion] as Destination[];
+      const regionDestinations = destinationsByRegion[activeRegion];
       const regionCodes = regionDestinations.map(d => d.iata);
       
       // If accuracy is high, assume mastery of these codes (simplified for now)
@@ -78,7 +74,9 @@ export default function Home() {
       }
 
       // Update points
-      newState.points += Math.round(accuracy * (gameMode === "exam" ? 2 : 1));
+      const multiplier = gameMode === "exam" ? 2 : 1;
+      const difficultyBonus = difficulty === "challenge" ? 1.5 : 1;
+      newState.points += Math.round(accuracy * multiplier * difficultyBonus);
 
       return newState;
     });
@@ -145,8 +143,6 @@ export default function Home() {
               bestScores={gameState.bestScores}
               onSelectRegion={(region) => {
                 setActiveRegion(region);
-                // Show mode selection or just start practice
-                setGameMode("practice");
                 setCurrentScreen("game");
               }}
             />
@@ -157,10 +153,11 @@ export default function Home() {
 
         {currentScreen === "game" && activeRegion && (
           <TriviaEngine
-            key="game-engine"
-            region={activeRegion}
-            destinations={(destinosData as any)[activeRegion]}
+            key={`game-engine-${activeRegion}-${gameMode}-${difficulty}-${timerSeconds}`}
+            destinations={destinationsByRegion[activeRegion]}
             mode={gameMode}
+            difficulty={difficulty}
+            timerSeconds={timerSeconds}
             onComplete={handleGameComplete}
             onExit={() => setCurrentScreen("regions")}
           />
@@ -211,25 +208,57 @@ export default function Home() {
 
       {/* Mode Toggle for Game (only visible on regions screen when a region is focused/selected or global) */}
       {currentScreen === "regions" && (
-        <div className="fixed bottom-6 left-4 right-4 flex bg-[var(--secondary)] p-1 rounded-2xl border border-white/10 shadow-2xl">
-          <button 
-            onClick={() => setGameMode("practice")}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all ${
-              gameMode === "practice" ? "bg-[var(--primary)] text-[#050b18] font-bold" : "text-white/40"
+        <div className="fixed bottom-6 right-4 z-50">
+          <button
+            onClick={() => setShowGameOptions((prev) => !prev)}
+            className="btn-primary px-4 py-3 text-sm"
+          >
+            {showGameOptions ? "Cerrar opciones" : "Opciones"}
+          </button>
+
+          <div
+            className={`absolute bottom-14 right-0 w-64 glass-card p-4 transition-all duration-200 ${
+              showGameOptions ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-3 pointer-events-none"
             }`}
           >
-            <GraduationCap size={18} />
-            Práctica
-          </button>
-          <button 
-            onClick={() => setGameMode("exam")}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all ${
-              gameMode === "exam" ? "bg-[var(--primary)] text-[#050b18] font-bold" : "text-white/40"
-            }`}
-          >
-            <TimerIcon size={18} />
-            Examen
-          </button>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs uppercase tracking-wider opacity-70 mb-1">Modo</label>
+                <select
+                  value={gameMode}
+                  onChange={(e) => setGameMode(e.target.value as "practice" | "exam")}
+                  className="w-full rounded-lg bg-[var(--secondary)] border border-white/20 px-3 py-2"
+                >
+                  <option value="practice">Práctica</option>
+                  <option value="exam">Examen</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-wider opacity-70 mb-1">Dificultad</label>
+                <select
+                  value={difficulty}
+                  onChange={(e) => setDifficulty(e.target.value as "standard" | "challenge")}
+                  className="w-full rounded-lg bg-[var(--secondary)] border border-white/20 px-3 py-2"
+                >
+                  <option value="standard">Normal</option>
+                  <option value="challenge">Desafío</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-wider opacity-70 mb-1">Timer</label>
+                <select
+                  value={timerSeconds}
+                  onChange={(e) => setTimerSeconds(Number(e.target.value) as 5 | 7)}
+                  className="w-full rounded-lg bg-[var(--secondary)] border border-white/20 px-3 py-2"
+                >
+                  <option value={5}>5 segundos</option>
+                  <option value={7}>7 segundos</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </main>
