@@ -1,9 +1,17 @@
 "use client";
 
+interface WindowWithWebkitAudio extends Window {
+  webkitAudioContext?: typeof AudioContext;
+}
+
 const playSound = (type: "correct" | "incorrect") => {
   if (typeof window === "undefined") return;
-  
-  const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+  const audioWindow = window as WindowWithWebkitAudio;
+  const AudioContextClass = audioWindow.AudioContext || audioWindow.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  const ctx = new AudioContextClass();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   
