@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ✈️ Copa IATA Master
 
-## Getting Started
+**Copa IATA Master** es una aplicación web interactiva y educativa diseñada para ayudar a entusiastas de la aviación, estudiantes y profesionales a memorizar los 85 códigos IATA de los destinos operados por Copa Airlines.
 
-First, run the development server:
+![Copa IATA Master](public/hero.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🎮 Cómo Jugar
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1.  **Selecciona una Región**: Comienza con Norteamérica y desbloquea nuevas regiones a medida que demuestres tu dominio.
+2.  **Elige tu Modo**:
+    *   **Modo Práctica**: Tómate tu tiempo para aprender cada código sin presión.
+    *   **Modo Examen**: Pon a prueba tus reflejos con un cronómetro de 5 a 7 segundos por pregunta.
+3.  **Responde**: Escribe el código IATA de 3 letras para la ciudad mostrada o selecciona la ciudad correcta si se te da el código (en modo desafío).
+4.  **Gana Puntos y Desbloquea**: Obtén una precisión del **90% o más** para desbloquear la siguiente región en el mapa.
+5.  **Cuida tus Vidas**: Tienes 3 vidas por sesión. Si las pierdes todas, el juego termina.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Funcionalidades Principales
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🗺️ Progresión por Regiones
+El juego está dividido en 8 regiones estratégicas que se desbloquean secuencialmente:
+- Norteamérica
+- Centroamérica
+- Caribe
+- Colombia
+- Brasil
+- Venezuela
+- Argentina
+- Suramérica General
 
-## Learn More
+### 👨‍✈️ Sistema de Rangos
+Tu progreso global te otorga rangos basados en la cantidad de códigos "dominados":
+- **Cadete**: 0% - 39%
+- **Copiloto**: 40% - 69%
+- **Primer Oficial**: 70% - 89%
+- **Capitán**: 90% - 99%
+- **Comandante de Flota**: 100%
 
-To learn more about Next.js, take a look at the following resources:
+### 🎲 Modos de Dificultad
+- **Estándar**: Preguntas en orden alfabético de Ciudad a IATA.
+- **Desafío (Challenge)**: Preguntas aleatorias y modo "Inverso" (donde debes identificar la ciudad a partir del código IATA).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### ⚡ Experiencia de Usuario Premium
+- **Feedback Visual Dinámico**: Animaciones de vibración (shake) para errores y destellos de color para aciertos.
+- **Efectos de Sonido**: Audio inmersivo para aciertos, errores y finalización de niveles.
+- **Diseño Glassmorphism**: Una interfaz moderna, limpia y responsive que se adapta a dispositivos móviles y escritorio.
+- **Confeti de Celebración**: Efectos de victoria al alcanzar puntajes perfectos.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tecnologías Utilizadas
 
-## Deploy on Vercel
+- **Next.js 15+** (App Router)
+- **React**
+- **Tailwind CSS** (Diseño Premium)
+- **Framer Motion** (Animaciones fluidas)
+- **Lucide React** (Iconografía)
+- **Canvas Confetti** (Efectos visuales)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📦 Instalación y Desarrollo
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Si deseas ejecutar este proyecto localmente:
+
+1. Clona el repositorio:
+   ```bash
+   git clone [url-del-repositorio]
+   ```
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+3. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+4. Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+
+---
+*Desarrollado con ❤️ para la comunidad aeronáutica.*
