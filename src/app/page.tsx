@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plane, Play, GraduationCap, Trophy, RotateCcw, Timer as TimerIcon } from "lucide-react";
+import { Plane, Play, Trophy, RotateCcw } from "lucide-react";
 import Dashboard from "@/components/game/Dashboard";
 import RegionSelector from "@/components/game/RegionSelector";
 import TriviaEngine from "@/components/game/TriviaEngine";
@@ -25,6 +25,8 @@ export default function Home() {
   const [activeRegion, setActiveRegion] = useState<Region | null>(null);
   const [gameMode, setGameMode] = useState<"practice" | "exam">("practice");
   const [difficulty, setDifficulty] = useState<"standard" | "challenge">("standard");
+  const [timerSeconds, setTimerSeconds] = useState<5 | 7>(5);
+  const [showGameOptions, setShowGameOptions] = useState(false);
   const [lastResult, setLastResult] = useState<{ region: Region, accuracy: number } | null>(null);
   const destinationsByRegion = destinosData as Record<Region, Destination[]>;
 
@@ -151,10 +153,11 @@ export default function Home() {
 
         {currentScreen === "game" && activeRegion && (
           <TriviaEngine
-            key={`game-engine-${activeRegion}-${gameMode}-${difficulty}`}
+            key={`game-engine-${activeRegion}-${gameMode}-${difficulty}-${timerSeconds}`}
             destinations={destinationsByRegion[activeRegion]}
             mode={gameMode}
             difficulty={difficulty}
+            timerSeconds={timerSeconds}
             onComplete={handleGameComplete}
             onExit={() => setCurrentScreen("regions")}
           />
@@ -205,45 +208,56 @@ export default function Home() {
 
       {/* Mode Toggle for Game (only visible on regions screen when a region is focused/selected or global) */}
       {currentScreen === "regions" && (
-        <div className="fixed bottom-6 left-4 right-4 space-y-2">
-          <div className="flex bg-[var(--secondary)] p-1 rounded-2xl border border-white/10 shadow-2xl">
-            <button 
-              onClick={() => setGameMode("practice")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all ${
-                gameMode === "practice" ? "bg-[var(--primary)] text-[#050b18] font-bold" : "text-white/40"
-              }`}
-            >
-              <GraduationCap size={18} />
-              Práctica
-            </button>
-            <button 
-              onClick={() => setGameMode("exam")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all ${
-                gameMode === "exam" ? "bg-[var(--primary)] text-[#050b18] font-bold" : "text-white/40"
-              }`}
-            >
-              <TimerIcon size={18} />
-              Examen
-            </button>
-          </div>
+        <div className="fixed bottom-6 right-4 z-50">
+          <button
+            onClick={() => setShowGameOptions((prev) => !prev)}
+            className="btn-primary px-4 py-3 text-sm"
+          >
+            {showGameOptions ? "Cerrar opciones" : "Opciones"}
+          </button>
 
-          <div className="flex bg-[var(--secondary)] p-1 rounded-2xl border border-white/10 shadow-2xl">
-            <button
-              onClick={() => setDifficulty("standard")}
-              className={`flex-1 py-3 rounded-xl transition-all ${
-                difficulty === "standard" ? "bg-[var(--primary)] text-[#050b18] font-bold" : "text-white/40"
-              }`}
-            >
-              Normal
-            </button>
-            <button
-              onClick={() => setDifficulty("challenge")}
-              className={`flex-1 py-3 rounded-xl transition-all ${
-                difficulty === "challenge" ? "bg-[var(--primary)] text-[#050b18] font-bold" : "text-white/40"
-              }`}
-            >
-              Desafío
-            </button>
+          <div
+            className={`absolute bottom-14 right-0 w-64 glass-card p-4 transition-all duration-200 ${
+              showGameOptions ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-3 pointer-events-none"
+            }`}
+          >
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs uppercase tracking-wider opacity-70 mb-1">Modo</label>
+                <select
+                  value={gameMode}
+                  onChange={(e) => setGameMode(e.target.value as "practice" | "exam")}
+                  className="w-full rounded-lg bg-[var(--secondary)] border border-white/20 px-3 py-2"
+                >
+                  <option value="practice">Práctica</option>
+                  <option value="exam">Examen</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-wider opacity-70 mb-1">Dificultad</label>
+                <select
+                  value={difficulty}
+                  onChange={(e) => setDifficulty(e.target.value as "standard" | "challenge")}
+                  className="w-full rounded-lg bg-[var(--secondary)] border border-white/20 px-3 py-2"
+                >
+                  <option value="standard">Normal</option>
+                  <option value="challenge">Desafío</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-wider opacity-70 mb-1">Timer</label>
+                <select
+                  value={timerSeconds}
+                  onChange={(e) => setTimerSeconds(Number(e.target.value) as 5 | 7)}
+                  className="w-full rounded-lg bg-[var(--secondary)] border border-white/20 px-3 py-2"
+                >
+                  <option value={5}>5 segundos</option>
+                  <option value={7}>7 segundos</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       )}

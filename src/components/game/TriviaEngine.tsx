@@ -11,6 +11,7 @@ interface TriviaEngineProps {
   destinations: Destination[];
   mode: "practice" | "exam";
   difficulty: "standard" | "challenge";
+  timerSeconds: 5 | 7;
   onComplete: (accuracy: number) => void;
   onExit: () => void;
 }
@@ -34,14 +35,14 @@ const createQuestionPlan = (destinations: Destination[], difficulty: "standard" 
   return { order, modes };
 };
 
-export default function TriviaEngine({ destinations, mode, difficulty, onComplete, onExit }: TriviaEngineProps) {
+export default function TriviaEngine({ destinations, mode, difficulty, timerSeconds, onComplete, onExit }: TriviaEngineProps) {
   const { order, modes } = useMemo(() => createQuestionPlan(destinations, difficulty), [destinations, difficulty]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState("");
   const [lives, setLives] = useState(3);
   const [correctCount, setCorrectCount] = useState(0);
   const [feedback, setFeedback] = useState<"correct" | "incorrect" | null>(null);
-  const [timeLeft, setTimeLeft] = useState(5);
+  const [timeLeft, setTimeLeft] = useState<number>(timerSeconds);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -77,7 +78,7 @@ export default function TriviaEngine({ destinations, mode, difficulty, onComplet
 
   const goToNextQuestion = useCallback((finalCorrectCount: number, remainingLives: number) => {
     setFeedback(null);
-    setTimeLeft(5);
+    setTimeLeft(timerSeconds);
     setUserInput("");
     setSelectedOption(null);
 
@@ -86,7 +87,7 @@ export default function TriviaEngine({ destinations, mode, difficulty, onComplet
       return;
     }
     finishGame(finalCorrectCount);
-  }, [currentIndex, finishGame, totalQuestions]);
+  }, [currentIndex, finishGame, timerSeconds, totalQuestions]);
 
   const handleAnswer = useCallback((isCorrect: boolean) => {
     if (feedback || !currentDestination) return;
@@ -123,10 +124,19 @@ export default function TriviaEngine({ destinations, mode, difficulty, onComplet
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toUpperCase().slice(0, 3);
     setUserInput(value);
-    
-    if (value.length === 3) {
-      handleAnswer(value === currentDestination.iata.toUpperCase());
+  };
+
+  const handleConfirmAnswer = () => {
+    if (feedback) return;
+
+    if (currentPromptMode === "iata_to_city") {
+      if (!selectedOption) return;
+      handleAnswer(selectedOption === currentDestination.ciudad);
+      return;
     }
+
+    if (userInput.length !== 3) return;
+    handleAnswer(userInput === currentDestination.iata.toUpperCase());
   };
 
   const handleCloseIncorrectFeedback = () => {
@@ -194,35 +204,57 @@ export default function TriviaEngine({ destinations, mode, difficulty, onComplet
 
         <div className="relative w-full flex flex-col items-center">
           {currentPromptMode === "city_to_iata" ? (
-            <motion.input
-              ref={inputRef}
-              type="text"
-              value={userInput}
-              onChange={handleInputChange}
-              disabled={!!feedback}
-              placeholder="---"
-              className={`iata-input ${feedback === "incorrect" ? "border-[var(--error)] text-[var(--error)]" : ""}`}
-              autoFocus
-            />
+            <div className="w-full flex flex-col items-center gap-4">
+              <motion.input
+                ref={inputRef}
+                type="text"
+                value={userInput}
+                onChange={handleInputChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleConfirmAnswer();
+                  }
+                }}
+                disabled={!!feedback}
+                placeholder="---"
+                className={`iata-input ${feedback === "incorrect" ? "border-[var(--error)] text-[var(--error)]" : ""}`}
+                autoFocus
+              />
+              <button
+                onClick={handleConfirmAnswer}
+                disabled={!!feedback || userInput.length !== 3}
+                className="btn-primary w-full max-w-xs disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Confirmar respuesta
+              </button>
+            </div>
           ) : (
-            <div className="w-full grid grid-cols-1 gap-3">
-              {cityOptions.map((city) => (
-                <button
-                  key={city}
-                  onClick={() => {
-                    setSelectedOption(city);
-                    handleAnswer(city === currentDestination.ciudad);
-                  }}
-                  disabled={!!feedback}
-                  className={`w-full rounded-xl border px-4 py-3 text-left transition-all ${
-                    selectedOption === city
-                      ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                      : "border-white/20 hover:border-[var(--primary)]/70"
-                  }`}
-                >
-                  {city.replace(/\s*\(.*?\)\s*/g, "").trim()}
-                </button>
-              ))}
+            <div className="w-full flex flex-col gap-4">
+              <div className="w-full grid grid-cols-1 gap-3">
+                {cityOptions.map((city) => (
+                  <button
+                    key={city}
+                    onClick={() => {
+                      setSelectedOption(city);
+                    }}
+                    disabled={!!feedback}
+                    className={`w-full rounded-xl border px-4 py-3 text-left transition-all ${
+                      selectedOption === city
+                        ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                        : "border-white/20 hover:border-[var(--primary)]/70"
+                    }`}
+                  >
+                    {city.replace(/\s*\(.*?\)\s*/g, "").trim()}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleConfirmAnswer}
+                disabled={!!feedback || !selectedOption}
+                className="btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Confirmar respuesta
+              </button>
             </div>
           )}
           
